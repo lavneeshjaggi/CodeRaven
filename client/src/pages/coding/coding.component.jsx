@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Select from "react-select";
 
 import CustomButton from "../../components/custom-button/custom-button.component";
 
@@ -12,16 +13,16 @@ class CodingPage extends React.Component {
     this.state = {
       code: "",
       input: "",
-      output: "Testing",
+      language: "C++14",
+      status: "Status",
+      output: "Output",
+      cpuTime:  "Cpu Time",
+      memory: "Memory"
     };
   }
 
   handleSubmit = async (event) => {
     event.preventDefault();
-
-    // #include<iostream> using namespace std; int main() { cout<<"Hello World!"; return 0; }
-
-    // ----------------------------------------------------------------------------------
 
     // #include<iostream>
 
@@ -56,7 +57,12 @@ class CodingPage extends React.Component {
         language: "cpp",
       })
       .then((res) => {
+        const status = res.data.statusCode === 200 ? "Successful" : "Error";
+
+        this.setState({ status: status });
         this.setState({ output: res.data.output });
+        this.setState({ cpuTime: res.data.cpuTime });
+        this.setState({ memory: res.data.memory });
       })
       .catch((err) => {
         this.setState({ output: "Some error occured" });
@@ -71,19 +77,47 @@ class CodingPage extends React.Component {
   };
 
   render() {
+    const languages = [
+      {label: 'C', value: 'c'},
+      {label: 'C++', value: 'cpp17'},
+      {label: 'C#', value: 'csharp'},
+      {label: 'Dart', value: 'dart'},
+      {label: 'Go Lang', value: 'go'},
+      {label: 'Java', value: 'java'},
+      {label: 'Kotlin', value: 'kotlin'},
+      {label: 'NodeJS', value: 'nodejs'},
+      {label: 'PHP', value: 'php'},
+      {label: 'Python', value: 'python2'},
+      {label: 'Python3', value: 'python3'},
+      {label: 'Racket', value: 'racket'},
+      {label: 'Ruby', value: 'ruby'},
+      {label: 'Rust', value: 'rust'},
+      {label: 'Scala', value: 'scala'},
+      {label: 'Swift', value: 'swift'},
+    ]
+
     return (
       <div className="coding-page">
+        <Select className="select" options={languages} placeholder="Choose a language" />
         <form onSubmit={this.handleSubmit}>
+          <div className="coding">
+            <textarea
+              className="code"
+              name="code"
+              type="text"
+              onChange={this.handleChange}
+              value={this.state.code}
+              placeholder="Write your code here"
+            />
+            <div className="output">
+              <p>Status: {this.state.status}</p>
+              <p>Output: {this.state.output}</p>
+              <p>CPU Time: {this.state.cpuTime}</p>
+              <p>Memory: {this.state.memory}</p>
+            </div>
+          </div>
           <textarea
-            className="text"
-            name="code"
-            type="text"
-            onChange={this.handleChange}
-            value={this.state.code}
-            placeholder="Write your code here"
-          />
-          <textarea
-            className="text"
+            className="input"
             name="input"
             type="text"
             onChange={this.handleChange}
@@ -100,10 +134,6 @@ class CodingPage extends React.Component {
             <CustomButton type="submit">Run Code</CustomButton>
           </div>
         </form>
-
-        <div className="output">
-          <h1>{this.state.output}</h1>
-        </div>
       </div>
     );
   }

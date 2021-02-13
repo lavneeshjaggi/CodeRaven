@@ -6,6 +6,7 @@ import "./header.styles.scss";
 const Header = ({ history }) => (
   <div className="header">
     <Logo className="logo" />
+    <h1>CODING RAVEN</h1>
   </div>
 );
 

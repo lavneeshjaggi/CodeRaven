@@ -1,18 +1,38 @@
 .coding-page {
+    color: #ffffff;
     align-items: center;
     display: flex;
     flex-direction: column;
 
-    .text {
-        color: #f5d020;
+    .select {
+        width: 240px;
+    }   
+
+    .coding {
+        display: flex;
+        flex-flow: column-wrap;
+        width: 98.9vw;
+
+        .code {
+            background-color: #232526;
+            height: 69vh;
+            width: 50%;
+        }
+
+        .output {
+            text-align: center;
+            background-color: #232526;
+            height: 69vh;
+            width: 50%;
+        }
+    }
+
+    .input {
         background-color: #232526;
-        height: 45vh;
-        margin: 60px;
-        width: 39vw;
     }
 
     .buttons {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
     }
 }

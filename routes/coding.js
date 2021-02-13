@@ -28,11 +28,14 @@ router.post("/", (req, res, next) => {
           error: err,
         });
       } else {
-        console.log(response);
+        const { statusCode, output, cpuTime, memory } = body; 
 
         return res.status(200).json({
           error: error,
-          output: body.output,
+          statusCode: statusCode,
+          output: output,
+          cpuTime: cpuTime,
+          memory: memory
         });
       }
     }
