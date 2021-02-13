@@ -1,38 +1,42 @@
 const express = require("express"),
-  hackerEarth = require("hackerearth-node");
+  config = require("config"),
+  request = require("request");
 
-const router = express.Router(),
-  HE = new hackerEarth("f13bcdf4184fe97589898c30fa7c7099e5f2f443", "");
+const router = express.Router();
 
 router.post("/", (req, res, next) => {
-  const config = {
-    time_limit: 5,
-    memory_limit: 323244,
-    source: req.body.code,
-    input: req.body.input,
+  const program = {
+    script: req.body.code,
+    stdin: req.body.input,
     language: req.body.language,
+    versionIndex: "0",
+    clientId: config.clientId,
+    clientSecret: config.clientSecret
   };
-  HE.run(config, function (err, response) {
-    if (err) {
-      console.log(err);
+  request(
+    {
+      url: "https://api.jdoodle.com/v1/execute",
+      method: "POST",
+      json: program,
+    },
+    function (error, response, body) {
+      if (error) {
+        console.log(err);
 
-      return res.status(500).json({
-        message: "Unable to process the request",
-        error: err,
-      });
-    } else {
-      console.log(JSON.parse(response));
+        return res.status(500).json({
+          message: "Unable to process the request",
+          error: err,
+        });
+      } else {
+        console.log(response);
 
-      const obj = JSON.parse(response),
-        error = obj.run_status.stderr,
-        output = obj.run_status.output;
-
-      return res.status(200).json({
-        error: error,
-        output: output,
-      });
+        return res.status(200).json({
+          error: error,
+          output: body.output,
+        });
+      }
     }
-  });
+  );
 });
 
 module.exports = router;
