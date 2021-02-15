@@ -5,7 +5,9 @@
   width: 100%;
 
   .options {
-    width: 30vw;
+    width: 15vw;
+    height: 6vh;
+    z-index: 2;
   }
 
   .form {
@@ -42,16 +44,6 @@
           justify-content: center;
           width: 100%;
         }
-
-        .ace {
-          height: 1000px;
-        }
-
-        // .item2 {
-        //   color: #ffffff;
-        //   height: 90%;
-        //   width: 100%;
-        // }
       }
 
       .text {

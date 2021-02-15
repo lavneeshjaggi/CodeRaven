@@ -1,25 +1,23 @@
 import React from "react";
 import axios from "axios";
-import Select from "react-select";
 import AceEditor from "react-ace";
-import brace from "brace";
 
-import "brace/mode/java";
 import "brace/mode/c_cpp";
+import "brace/mode/csharp";
+import "brace/mode/dart";
+import "brace/mode/golang";
+import "brace/mode/java";
+import "brace/mode/kotlin";
+import "brace/mode/python";
+import "brace/mode/ruby";
+import "brace/mode/rust";
+import "brace/mode/scala";
+import "brace/mode/swift";
 
 import "brace/theme/github";
 import "brace/theme/monokai";
 
-// import SyntaxHighlighter from "react-syntax-highlighter";
-// import hljs from "highlight.js";
-
-// import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-
-// import "highlight.js/styles/github.css";
-// import json from "highlight.js/lib/languages/json";
-
 import CustomButton from "../../components/custom-button/custom-button.component";
-import Languages from "./languages";
 
 import "./coding.styles.scss";
 
@@ -30,7 +28,8 @@ class CodingPage extends React.Component {
     this.state = {
       code: "",
       input: "",
-      language: "public var const let null",
+      language: "cpp17",
+      language_ace: "c_cpp",
       status: "",
       output: "",
       cpuTime: "",
@@ -40,6 +39,10 @@ class CodingPage extends React.Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
+
+    console.log("Language");
+    console.log(this.state.language);
+    console.log(this.state.language_ace);
 
     // #include<iostream>
 
@@ -71,7 +74,7 @@ class CodingPage extends React.Component {
       .post("/coding", {
         code: this.state.code,
         input: this.state.input,
-        language: "cpp",
+        language: this.state.language,
       })
       .then((res) => {
         const status = res.data.statusCode === 200 ? "Successful" : "Error";
@@ -95,16 +98,44 @@ class CodingPage extends React.Component {
     const { name, value } = event.target;
 
     this.setState({ [name]: value });
+
+    if (name === "language") {
+      if (value === "cpp17" || value === "c") {
+        this.setState({ language_ace: "c_cpp" });
+      } else if (value === "go") {
+        this.setState({ language_ace: "golang" });
+      } else {
+        this.setState({ language_ace: value });
+      }
+    }
+
+    console.log(this.state.language);
+    console.log(this.state.language_ace);
+    console.log(value);
   };
 
   render() {
     return (
       <div className="coding-page">
-        <Select
+        <select
           className="options"
-          options={Languages}
-          placeholder="Choose a language"
-        />
+          name="language"
+          value={this.state.language}
+          onChange={this.handleChange}
+        >
+          <option value="c">C</option>
+          <option value="cpp17">C++</option>
+          <option value="csharp">C#</option>
+          <option value="dart">Dart</option>
+          <option value="go">Go</option>
+          <option value="java">Java</option>
+          <option value="kotlin">Kotlin</option>
+          <option value="python">Python</option>
+          <option value="ruby">Ruby</option>
+          <option value="rust">Rust</option>
+          <option value="scala">Scala</option>
+          <option value="swift">Swift</option>
+        </select>
         <form className="form" onSubmit={this.handleSubmit}>
           <div className="coding-area">
             <div className="source-code">
@@ -112,11 +143,10 @@ class CodingPage extends React.Component {
               <AceEditor
                 className="ace"
                 editorProps={{ $blockScrolling: true }}
-                mode="c_cpp"
-                name="code"
+                mode={this.state.language_ace}
                 name="code"
                 onChange={(code) => this.setState({ code })}
-                setOptions={{
+                setOption={{
                   enableBasicAutocompletion: true,
                 }}
                 style={{
@@ -128,12 +158,6 @@ class CodingPage extends React.Component {
                 theme="monokai"
                 fontSize={15}
               />
-              {/* <textarea
-                className="item2"
-                name="code"
-                onChange={this.handleChange}
-                value={this.state.code}
-              /> */}
             </div>
             <div className="text">
               <div className="input">
