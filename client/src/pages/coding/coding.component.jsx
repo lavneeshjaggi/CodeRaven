@@ -1,24 +1,27 @@
 import React from "react";
 import axios from "axios";
 import Select from "react-select";
-import Editor from "react-simple-code-editor";
-import Highlight from "react-hljs";
-// import Prism from "prismjs";
-// import AceEditor from "react-ace";
+import AceEditor from "react-ace";
+import brace from "brace";
 
-// import { highlight, languages } from "prismjs/components/prism-core";
-// import "prismjs/components/prism-clike";
-// import "prismjs/components/prism-javascript";
+import "brace/mode/java";
+import "brace/mode/c_cpp";
+
+import "brace/theme/github";
+import "brace/theme/monokai";
+
+// import SyntaxHighlighter from "react-syntax-highlighter";
+// import hljs from "highlight.js";
+
+// import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
+// import "highlight.js/styles/github.css";
+// import json from "highlight.js/lib/languages/json";
 
 import CustomButton from "../../components/custom-button/custom-button.component";
 import Languages from "./languages";
 
 import "./coding.styles.scss";
-
-// import "ace-builds/src-noconflict/mode-java";
-// import "ace-builds/src-noconflict/mode-cpp";
-// import "ace-builds/src-noconflict/theme-github";
-// import "ace-builds/src-noconflict/theme-monokai";
 
 class CodingPage extends React.Component {
   constructor() {
@@ -27,7 +30,7 @@ class CodingPage extends React.Component {
     this.state = {
       code: "",
       input: "",
-      language: "C++",
+      language: "public var const let null",
       status: "",
       output: "",
       cpuTime: "",
@@ -102,25 +105,29 @@ class CodingPage extends React.Component {
           options={Languages}
           placeholder="Choose a language"
         />
-        {/* <AceEditor className="test" /> */}
         <form className="form" onSubmit={this.handleSubmit}>
           <div className="coding-area">
             <div className="source-code">
               <h3 className="item1">Source Code</h3>
-              <Highlight className="js">
-                {this.state.language}
-                {/* <Editor
-                  className="test"
-                  value={this.state.code}
-                  onValueChange={(code) => this.setState({ code })}
-                  // highlight={(code) => highlight(code, languages.js)}
-                  padding={3}
-                  tabSize={6}
-                  style={{
-                    fontSize: 15,
-                  }}
-                /> */}
-              </Highlight>
+              <AceEditor
+                className="ace"
+                editorProps={{ $blockScrolling: true }}
+                mode="c_cpp"
+                name="code"
+                name="code"
+                onChange={(code) => this.setState({ code })}
+                setOptions={{
+                  enableBasicAutocompletion: true,
+                }}
+                style={{
+                  fontSize: 30,
+                  height: 375,
+                  width: 682,
+                }}
+                tabSize={6}
+                theme="monokai"
+                fontSize={15}
+              />
               {/* <textarea
                 className="item2"
                 name="code"
