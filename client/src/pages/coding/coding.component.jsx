@@ -14,8 +14,14 @@ import "brace/mode/rust";
 import "brace/mode/scala";
 import "brace/mode/swift";
 
+import "brace/theme/eclipse";
 import "brace/theme/github";
 import "brace/theme/monokai";
+import "brace/theme/solarized_dark";
+import "brace/theme/solarized_light";
+import "brace/theme/textmate";
+import "brace/theme/tomorrow_night";
+import "brace/theme/xcode";
 
 import CustomButton from "../../components/custom-button/custom-button.component";
 
@@ -27,48 +33,19 @@ class CodingPage extends React.Component {
 
     this.state = {
       code: "",
+      cpuTime: "",
       input: "",
       language: "cpp17",
       language_ace: "c_cpp",
-      status: "",
-      output: "",
-      cpuTime: "",
       memory: "",
+      output: "",
+      status: "",
+      theme: "monokai",
     };
   }
 
   handleSubmit = async (event) => {
     event.preventDefault();
-
-    console.log("Language");
-    console.log(this.state.language);
-    console.log(this.state.language_ace);
-
-    // #include<iostream>
-
-    // using namespace std;
-
-    // int main() {
-    //       cout<<"Hello World!";
-
-    //       return 0;
-    // }
-
-    // ----------------------------------------------------------------------------------
-
-    // #include<iostream>
-
-    // using namespace std;
-
-    // int main() {
-    //     int n;
-
-    //     cin>>n;
-
-    //     cout<<n;
-
-    //     return 0;
-    // }
 
     axios
       .post("/coding", {
@@ -99,47 +76,56 @@ class CodingPage extends React.Component {
 
     this.setState({ [name]: value });
 
-    if (name === "language") {
-      if (value === "cpp17" || value === "c") {
+    if (name === "language")
+      if (value === "cpp17" || value === "c")
         this.setState({ language_ace: "c_cpp" });
-      } else if (value === "go") {
-        this.setState({ language_ace: "golang" });
-      } else {
-        this.setState({ language_ace: value });
-      }
-    }
-
-    console.log(this.state.language);
-    console.log(this.state.language_ace);
-    console.log(value);
+      else if (value === "go") this.setState({ language_ace: "golang" });
+      else this.setState({ language_ace: value });
   };
 
   render() {
     return (
       <div className="coding-page">
-        <select
-          className="options"
-          name="language"
-          value={this.state.language}
-          onChange={this.handleChange}
-        >
-          <option value="c">C</option>
-          <option value="cpp17">C++</option>
-          <option value="csharp">C#</option>
-          <option value="dart">Dart</option>
-          <option value="go">Go</option>
-          <option value="java">Java</option>
-          <option value="kotlin">Kotlin</option>
-          <option value="python">Python</option>
-          <option value="ruby">Ruby</option>
-          <option value="rust">Rust</option>
-          <option value="scala">Scala</option>
-          <option value="swift">Swift</option>
-        </select>
+        <div className="editor-settings">
+          <select
+            className="options"
+            name="language"
+            value={this.state.language}
+            onChange={this.handleChange}
+          >
+            <option value="c">C</option>
+            <option value="cpp17">C++</option>
+            <option value="csharp">C#</option>
+            <option value="dart">Dart</option>
+            <option value="go">Go</option>
+            <option value="java">Java</option>
+            <option value="kotlin">Kotlin</option>
+            <option value="python">Python</option>
+            <option value="ruby">Ruby</option>
+            <option value="rust">Rust</option>
+            <option value="scala">Scala</option>
+            <option value="swift">Swift</option>
+          </select>
+          <select
+            className="options"
+            name="theme"
+            value={this.state.theme}
+            onChange={this.handleChange}
+          >
+            <option value="eclipse">Eclipse</option>
+            <option value="github">Github</option>
+            <option value="monokai">Monokai</option>
+            <option value="solarized_dark">Solarized Dark</option>
+            <option value="solarized_light">Solarized Light</option>
+            <option value="textmate">Textmate</option>
+            <option value="tomorrow_night">Tomorrow Night</option>
+            <option value="xcode">Xcode</option>
+          </select>
+        </div>
         <form className="form" onSubmit={this.handleSubmit}>
           <div className="coding-area">
             <div className="source-code">
-              <h3 className="item1">Source Code</h3>
+              <h3 className="heading">Source Code</h3>
               <AceEditor
                 className="ace"
                 editorProps={{ $blockScrolling: true }}
@@ -154,14 +140,14 @@ class CodingPage extends React.Component {
                   height: 375,
                   width: 682,
                 }}
-                tabSize={6}
-                theme="monokai"
+                tabSize={4}
+                theme={this.state.theme}
                 fontSize={15}
               />
             </div>
             <div className="text">
               <div className="input">
-                <h3 className="item3">Input</h3>
+                <h3 className="heading">Input</h3>
                 <textarea
                   className="item4"
                   name="input"
@@ -170,13 +156,12 @@ class CodingPage extends React.Component {
                 />
               </div>
               <div className="output">
-                <h3 className="item5">Output</h3>
-                <div className="item6">
-                  <p>Status: {this.state.status}</p>
-                  <p>Output: {this.state.output}</p>
-                  <p>CPU Time: {this.state.cpuTime} Millisecond(s)</p>
-                  <p>Memory: {this.state.memory} Megabyte(s)</p>
-                </div>
+                <h3 className="heading">Output</h3>
+                <textarea
+                  className="item6"
+                  value={this.state.output}
+                  readOnly
+                />
               </div>
             </div>
           </div>
