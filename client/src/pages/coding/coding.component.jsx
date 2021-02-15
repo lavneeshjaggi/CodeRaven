@@ -1,10 +1,24 @@
 import React from "react";
 import axios from "axios";
 import Select from "react-select";
+import Editor from "react-simple-code-editor";
+import Highlight from "react-hljs";
+// import Prism from "prismjs";
+// import AceEditor from "react-ace";
+
+// import { highlight, languages } from "prismjs/components/prism-core";
+// import "prismjs/components/prism-clike";
+// import "prismjs/components/prism-javascript";
 
 import CustomButton from "../../components/custom-button/custom-button.component";
+import Languages from "./languages";
 
 import "./coding.styles.scss";
+
+// import "ace-builds/src-noconflict/mode-java";
+// import "ace-builds/src-noconflict/mode-cpp";
+// import "ace-builds/src-noconflict/theme-github";
+// import "ace-builds/src-noconflict/theme-monokai";
 
 class CodingPage extends React.Component {
   constructor() {
@@ -13,11 +27,11 @@ class CodingPage extends React.Component {
     this.state = {
       code: "",
       input: "",
-      language: "C++14",
-      status: "Status",
-      output: "Output",
-      cpuTime:  "Cpu Time",
-      memory: "Memory"
+      language: "C++",
+      status: "",
+      output: "",
+      cpuTime: "",
+      memory: "",
     };
   }
 
@@ -41,7 +55,7 @@ class CodingPage extends React.Component {
     // using namespace std;
 
     // int main() {
-    //     int n; 
+    //     int n;
 
     //     cin>>n;
 
@@ -58,11 +72,15 @@ class CodingPage extends React.Component {
       })
       .then((res) => {
         const status = res.data.statusCode === 200 ? "Successful" : "Error";
+        var { output, cpuTime, memory } = res.data;
+
+        cpuTime *= 1000;
+        memory = (memory / 1024).toFixed(1);
 
         this.setState({ status: status });
-        this.setState({ output: res.data.output });
-        this.setState({ cpuTime: res.data.cpuTime });
-        this.setState({ memory: res.data.memory });
+        this.setState({ output: output });
+        this.setState({ cpuTime: cpuTime });
+        this.setState({ memory: memory });
       })
       .catch((err) => {
         this.setState({ output: "Some error occured" });
@@ -77,61 +95,62 @@ class CodingPage extends React.Component {
   };
 
   render() {
-    const languages = [
-      {label: 'C', value: 'c'},
-      {label: 'C++', value: 'cpp17'},
-      {label: 'C#', value: 'csharp'},
-      {label: 'Dart', value: 'dart'},
-      {label: 'Go Lang', value: 'go'},
-      {label: 'Java', value: 'java'},
-      {label: 'Kotlin', value: 'kotlin'},
-      {label: 'NodeJS', value: 'nodejs'},
-      {label: 'PHP', value: 'php'},
-      {label: 'Python', value: 'python2'},
-      {label: 'Python3', value: 'python3'},
-      {label: 'Racket', value: 'racket'},
-      {label: 'Ruby', value: 'ruby'},
-      {label: 'Rust', value: 'rust'},
-      {label: 'Scala', value: 'scala'},
-      {label: 'Swift', value: 'swift'},
-    ]
-
     return (
       <div className="coding-page">
-        <Select className="select" options={languages} placeholder="Choose a language" />
-        <form onSubmit={this.handleSubmit}>
-          <div className="coding">
-            <textarea
-              className="code"
-              name="code"
-              type="text"
-              onChange={this.handleChange}
-              value={this.state.code}
-              placeholder="Write your code here"
-            />
-            <div className="output">
-              <p>Status: {this.state.status}</p>
-              <p>Output: {this.state.output}</p>
-              <p>CPU Time: {this.state.cpuTime}</p>
-              <p>Memory: {this.state.memory}</p>
+        <Select
+          className="options"
+          options={Languages}
+          placeholder="Choose a language"
+        />
+        {/* <AceEditor className="test" /> */}
+        <form className="form" onSubmit={this.handleSubmit}>
+          <div className="coding-area">
+            <div className="source-code">
+              <h3 className="item1">Source Code</h3>
+              <Highlight className="js">
+                {this.state.language}
+                {/* <Editor
+                  className="test"
+                  value={this.state.code}
+                  onValueChange={(code) => this.setState({ code })}
+                  // highlight={(code) => highlight(code, languages.js)}
+                  padding={3}
+                  tabSize={6}
+                  style={{
+                    fontSize: 15,
+                  }}
+                /> */}
+              </Highlight>
+              {/* <textarea
+                className="item2"
+                name="code"
+                onChange={this.handleChange}
+                value={this.state.code}
+              /> */}
+            </div>
+            <div className="text">
+              <div className="input">
+                <h3 className="item3">Input</h3>
+                <textarea
+                  className="item4"
+                  name="input"
+                  onChange={this.handleChange}
+                  value={this.state.input}
+                />
+              </div>
+              <div className="output">
+                <h3 className="item5">Output</h3>
+                <div className="item6">
+                  <p>Status: {this.state.status}</p>
+                  <p>Output: {this.state.output}</p>
+                  <p>CPU Time: {this.state.cpuTime} Millisecond(s)</p>
+                  <p>Memory: {this.state.memory} Megabyte(s)</p>
+                </div>
+              </div>
             </div>
           </div>
-          <textarea
-            className="input"
-            name="input"
-            type="text"
-            onChange={this.handleChange}
-            value={this.state.input}
-            placeholder="Write input here"
-          />
-          {/* <FormInput
-            className="text"
-            name="input"
-            type="text"
-            placeholder="Write custom input here"
-            /> */}
           <div className="buttons">
-            <CustomButton type="submit">Run Code</CustomButton>
+            <CustomButton type="submit">Run</CustomButton>
           </div>
         </form>
       </div>

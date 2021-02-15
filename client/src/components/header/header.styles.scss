@@ -1,23 +1,24 @@
 .header {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin: -10px 0 9px 0;
-    width: 100%;
+  align-items: center;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  margin: -10px 0 9px 0;
+  width: 100%;
 
-    .logo {
-        height: 90px;
-        width: 90px;
-    }
+  .logo {
+    height: 66px;
+    width: 66px;
+  }
 
-    @media screen and (max-width: 800px) {
-        width: 50px;
-        padding: 0px;
-    }
+  @media screen and (max-width: 800px) {
+    width: 50px;
+    padding: 0px;
+  }
 
-    @media screen and (max-width: 800px) {
-        height: 60px;
-        padding: 10px;
-        margin-bottom: 20px;
-    }
+  @media screen and (max-width: 800px) {
+    height: 60px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
 }
